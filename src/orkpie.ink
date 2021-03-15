@@ -1,7 +1,13 @@
-VAR orcAwareness = 0
+LIST moods = friendly, curious, unfazed, unamused, enraged 
+VAR orcMood = unfazed
+
+LIST preparedness = suprised, wary, prepared
+VAR orcPreparedness = suprised
+
 LIST creatureName = (creature), orc
 
-LIST playerAwareness = (asleep), liminal, lucid, trancendant
+LIST awareness =  asleep, liminal, lucid, trancendant
+VAR playerAwareness = asleep
 
 -> InFrontOfTheDoor
 
@@ -28,7 +34,8 @@ The door swings open.
 
 The room is 10ftx10ft and dimly lit.
 
-There is a fierce, muscular green {creatureName} here who appears to be armed with a misshapen blade.
+There is a fierce looking, muscular, green {creatureName} here who appears to be armed with a misshapen blade. It looks {orcPreparedness}.
+
 Between his boots is a wonderful, steaming fruit pie.
 
 -> RoomChoices
@@ -38,11 +45,11 @@ Between his boots is a wonderful, steaming fruit pie.
 * [the creature?] -> TheCreature
 * [a pie?] -> ThePie
 + [run!] -> FleeRoom
-+ [attack!] -> AttackOrk
++ [attack!] -> Attackorc
 
 
-=== AttackOrk
-{ orcAwareness > 1:
+=== Attackorc
+{ orcPreparedness > suprised :
     ->ReadyOrc
 - else:
     ->SupriseOrc
@@ -63,9 +70,12 @@ The pie is yours to savour!
 ->fin
 
 === ThePie
-~ orcAwareness++
+~ orcMood++
+~ orcPreparedness++
 The pie is clearly a work of culinary art.
-It's about 1' in diameter, puffed crust beutifully glazed and cracked and you can smell blueberries.
+It's about 1' in diameter, topped with a puffed and beutifully glazed, if sligtly cracked crust  and
+
+You can smell a waft of the essence of blurberry.
 
 ->RoomChoices
 
@@ -89,12 +99,13 @@ You are dead.
 ->fin
 
 === TheCreature
-~ orcAwareness++ 
+~ orcMood++ 
+~ orcPreparedness++
 ~ creatureName++
 The creature is an exemplar of the genus `ORC ORCUS`.
 They are generally regarded as fierce, green, muscluar, well armed (this one has a "choppa") and have a reputation for gleeful violence.
 
-It's beady red eyes narrow... It appears unamused.
+It's beady red eyes meet yours... It appears {orcMood}.
 
 -> RoomChoices
 
@@ -112,7 +123,7 @@ You take a few steps into the darkness, your footsteps echoing down the passagew
 === fin
 For you the tale has ended.
 
-{ playerAwareness > asleep:
+{ playerAwareness > asleep :
     + [or has it?] -> LetsGoAgain
 - else :
     -> END
@@ -120,10 +131,8 @@ For you the tale has ended.
 
 === LetsGoAgain
 ~ creatureName = creature
-~ orcAwareness = 0
+~ orcMood = suprised
 ~ playerAwareness++
 
 ... there is a ushing sense of velocity and then ...
 -> InFrontOfTheDoor
-
-
